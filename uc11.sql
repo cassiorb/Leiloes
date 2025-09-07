@@ -31,7 +31,7 @@ use uc11;
 CREATE TABLE `produtos` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `nome` text DEFAULT NULL,
-  `valor` double(11) DEFAULT NULL,
+  `valor` decimal(10,2) DEFAULT NULL, -- alterado para decimal para comportar centavos
   `status` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -39,7 +39,7 @@ CREATE TABLE `produtos` (
 -- Extraindo dados da tabela `produtos`
 --
 
-INSERT INTO `produtos` (`id`, `nome`, `valor`, `status`) VALUES
+INSERT INTO `produtos` (`id`, `nome`, `valor`, `status`) VALUES 
 (2, 'PS4', 1500, 'Vendido'),
 (3, 'Xbox 360', 800, 'Vendido'),
 (4, 'Iphone 12', 4800, 'Vendido'),
