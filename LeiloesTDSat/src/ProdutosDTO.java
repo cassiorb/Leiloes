@@ -10,7 +10,7 @@
 public class ProdutosDTO {
     private Integer id;
     private String nome;
-    private Double valor;
+    private Double valor; // Double para comportar centavos
     private String status;
 
     public Integer getId() {

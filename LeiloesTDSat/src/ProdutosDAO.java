@@ -32,7 +32,7 @@ public class ProdutosDAO {
             prep.setDouble(2, produto.getValor());     // Valor do produto
             prep.setString(3, produto.getStatus()); // Status (ex: "A Venda", "Vendido")
 
-            prep.executeUpdate(); // Executa o INSERT
+            prep.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!");
 
