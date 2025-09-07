@@ -1,3 +1,6 @@
+
+import javax.swing.JOptionPane;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -140,17 +143,60 @@ public class cadastroVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_cadastroNomeActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        ProdutosDTO produto = new ProdutosDTO();
-        String nome = cadastroNome.getText();
-        String valor = cadastroValor.getText();
-        String status = "A Venda";
-        produto.setNome(nome);
-        produto.setValor(Integer.parseInt(valor));
-        produto.setStatus(status);
-        
-        ProdutosDAO produtodao = new ProdutosDAO();
-        produtodao.cadastrarProduto(produto);
-        
+    String nome = cadastroNome.getText().trim();
+    String valorStr = cadastroValor.getText().trim();
+    String status = "A Venda";
+
+    // 1. Validação do nome
+    if (nome.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "O campo Nome é obrigatório.");
+        return;
+    }
+
+    // 2. Validação do valor
+    if (valorStr.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "O campo Valor é obrigatório.");
+        return;
+    }
+
+    Double valor = null;
+
+    // Substitui pontos (de milhar) e vírgula (decimal) → formato brasileiro: 1.500,99 → 1500.99
+    String valorFormatado = valorStr.replaceAll("\\.", "").replace(",", ".");
+
+    try {
+        valor = Double.parseDouble(valorFormatado);
+
+        // Verifica se o valor é positivo
+        if (valor <= 0) {
+            JOptionPane.showMessageDialog(null, "O valor deve ser maior que zero.");
+            return;
+        }
+
+        // Verifica se o valor tem no máximo 2 casas decimais
+        if (Math.abs(valor - Math.round(valor * 100) / 100.0) > 0.000001) {
+            JOptionPane.showMessageDialog(null, "O valor não pode ter mais de 2 casas decimais.");
+            return;
+        }
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Valor inválido. Use números no formato: 10 | 10,50 | 1.500,99");
+        return;
+    }
+
+    // 3. Cria o produto com o valor double exato
+    ProdutosDTO produto = new ProdutosDTO();
+    produto.setNome(nome);
+    produto.setValor(valor);
+    produto.setStatus(status);
+
+    // 4. Salva no banco
+    ProdutosDAO produtodao = new ProdutosDAO();
+    produtodao.cadastrarProduto(produto);
+
+    // 5. Limpa os campos
+    cadastroNome.setText("");
+    cadastroValor.setText("");
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void btnProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutosActionPerformed
