@@ -22,7 +22,34 @@ public class ProdutosDAO {
     PreparedStatement prep;
     ResultSet resultset;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
+public void venderProduto(int id) {
+    conn = new conectaDAO().getConnection();
+    String sql = "UPDATE produtos SET status = ? WHERE id = ?";
     
+    try {
+        prep = conn.prepareStatement(sql);
+        prep.setString(1, "Vendido"); // Define o novo status
+        prep.setInt(2, id);           // Usa o ID passado como parâmetro
+
+        int linhasAfetadas = prep.executeUpdate();
+
+        if (linhasAfetadas > 0) {
+            JOptionPane.showMessageDialog(null, "Produto vendido com sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Produto não encontrado com o ID informado.");
+        }
+
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Erro ao vender produto: " + e.getMessage());
+    } finally {
+        try {
+            if (prep != null) prep.close();
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao fechar conexão: " + e.getMessage());
+        }
+    }
+}    
     public void cadastrarProduto (ProdutosDTO produto){
         conn = new conectaDAO().getConnection();
         String sql = "INSERT INTO produtos (nome, valor, status) VALUES (?, ?, ?)";  
