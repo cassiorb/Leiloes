@@ -104,6 +104,39 @@ public void venderProduto(int id) {
         }
         return listagem;
     }
+    public ArrayList<ProdutosDTO> listarProdutosVendidos() {
+    conn = new conectaDAO().getConnection();
+    String sql = "SELECT * FROM produtos WHERE status = ?";
+    ArrayList<ProdutosDTO> listagemVendidos = new ArrayList<>();
+
+    try {
+        prep = conn.prepareStatement(sql);
+        prep.setString(1, "Vendido");
+
+        ResultSet resultset = prep.executeQuery();
+
+        while (resultset.next()) {
+            ProdutosDTO produto = new ProdutosDTO();
+            produto.setId(resultset.getInt("id"));
+            produto.setNome(resultset.getString("nome"));
+            produto.setValor(resultset.getDouble("valor"));
+            produto.setStatus(resultset.getString("status"));
+            listagemVendidos.add(produto);
+        }
+
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Erro ao listar produtos vendidos: " + e.getMessage());
+    } finally {
+        try {
+            if (prep != null) prep.close();
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao fechar conexão: " + e.getMessage());
+        }
+    }
+
+    return listagemVendidos;
+}
     
     
     
